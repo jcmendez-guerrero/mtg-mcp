@@ -10,10 +10,19 @@ import Stemmer
 class RulesRAG:
     """BM25s-based rules search engine."""
 
-    # Default rules URL - can be overridden in __init__
+    # Default rules URL - Update periodically when new comprehensive rules are released
+    # Check https://magic.wizards.com/en/rules for the latest version
+    # Format: https://media.wizards.com/YYYY/downloads/MagicCompRules%20YYYYMMDD.txt
     DEFAULT_RULES_URL = "https://media.wizards.com/2024/downloads/MagicCompRules%2020240802.txt"
 
     def __init__(self, rules_url: Optional[str] = None):
+        """
+        Initialize Rules RAG engine.
+
+        Args:
+            rules_url: Optional custom URL for comprehensive rules.
+                      If not provided, uses DEFAULT_RULES_URL.
+        """
         self.rules_url = rules_url or self.DEFAULT_RULES_URL
         self.rules: list[dict] = []
         self.retriever: Optional[bm25s.BM25] = None

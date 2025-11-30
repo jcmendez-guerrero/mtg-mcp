@@ -172,7 +172,9 @@ class Database:
         cards = []
         async for row in cursor:
             # row[6] is color_identity field - check against commander colors
-            card_color_identity = set(row[6].split(",")) if row[6] else set()
+            card_color_identity = (
+                set(c.strip() for c in row[6].split(",") if c.strip()) if row[6] else set()
+            )
             # Card is valid if its color identity is subset of commander colors
             if card_color_identity.issubset(color_set) or not card_color_identity:
                 card = Card(
@@ -181,7 +183,7 @@ class Database:
                     mana_cost=row[2],
                     cmc=row[3],
                     type_line=row[4],
-                    colors=row[5].split(",") if row[5] else [],
+                    colors=[c.strip() for c in row[5].split(",") if c.strip()] if row[5] else [],
                     color_identity=list(card_color_identity),
                     set_code=row[7],
                     collector_number=row[8],
@@ -213,8 +215,10 @@ class Database:
                 mana_cost=row[2],
                 cmc=row[3],
                 type_line=row[4],
-                colors=row[5].split(",") if row[5] else [],
-                color_identity=row[6].split(",") if row[6] else [],
+                colors=[c.strip() for c in row[5].split(",") if c.strip()] if row[5] else [],
+                color_identity=(
+                    [c.strip() for c in row[6].split(",") if c.strip()] if row[6] else []
+                ),
                 set_code=row[7],
                 collector_number=row[8],
                 rarity=row[9],
