@@ -1,0 +1,9 @@
+Name,Set,Collector Number,Quantity,Scryfall ID,Mana Cost,CMC,Type,Colors,Color Identity,Rarity
+Lightning Bolt,LEA,161,4,b34bb2dc-c1af-4d77-b0b3-a0fb342a5fc6,{R},1,Instant,R,R,common
+Sol Ring,LEA,265,1,fd6a5d4f-8f8a-4d29-89d7-e1c89a0c8c9f,{1},1,Artifact,,C,uncommon
+Command Tower,CMD,229,1,15bcd33f-c78f-4157-a4fd-b8e8f786284f,{T},0,Land,,,common
+Atraxa Praetors Voice,C16,28,1,aecbdd00-29f4-4f84-8bb2-6c0f5f87c5c8,{G}{W}{U}{B},4,Legendary Creature - Angel Horror,G|W|U|B,G|W|U|B,mythic
+Thassa's Oracle,THB,73,1,3d26baf7-0742-44bc-aadb-49fb0f4d3d9c,{U}{U},2,Creature - Merfolk Wizard,U,U,rare
+Demonic Tutor,LEA,97,1,05e5a18b-d4fd-42fc-9c74-1e02ad830a3e,{1}{B},2,Sorcery,B,B,uncommon
+Cyclonic Rift,RTR,35,1,f00fb03c-7e91-4f4e-bd9a-a8d1e6a0ff8e,{1}{U},2,Instant,U,U,rare
+Mana Crypt,EMA,225,1,cb2d31f1-6d9e-4be0-ba97-b3a1e5b8e9af,{0},0,Artifact,,C,mythic
