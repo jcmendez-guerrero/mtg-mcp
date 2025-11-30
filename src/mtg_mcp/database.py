@@ -74,11 +74,14 @@ class Database:
                 # ManaBox CSV typically has: Name, Set, Collector Number, Quantity, etc.
                 oracle_id = row.get("Scryfall ID", row.get("Oracle ID", ""))
                 if not oracle_id:
-                    # Generate a pseudo oracle_id if not available
+                    # Generate a unique pseudo oracle_id if not available
+                    import hashlib
+
                     name_part = row.get("Name", "")
                     set_part = row.get("Set", "")
                     num_part = row.get("Collector Number", "")
-                    oracle_id = f"{name_part}_{set_part}_{num_part}"
+                    combined = f"{name_part}_{set_part}_{num_part}"
+                    oracle_id = hashlib.md5(combined.encode()).hexdigest()
 
                 name = row.get("Name", row.get("Card Name", ""))
                 mana_cost = row.get("Mana Cost", row.get("Cost", ""))
@@ -168,9 +171,10 @@ class Database:
 
         cards = []
         async for row in cursor:
-            card_colors = set(row[6].split(",")) if row[6] else set()
+            # row[6] is color_identity field - check against commander colors
+            card_color_identity = set(row[6].split(",")) if row[6] else set()
             # Card is valid if its color identity is subset of commander colors
-            if card_colors.issubset(color_set) or not card_colors:
+            if card_color_identity.issubset(color_set) or not card_color_identity:
                 card = Card(
                     oracle_id=row[0],
                     name=row[1],
@@ -178,7 +182,7 @@ class Database:
                     cmc=row[3],
                     type_line=row[4],
                     colors=row[5].split(",") if row[5] else [],
-                    color_identity=list(card_colors),
+                    color_identity=list(card_color_identity),
                     set_code=row[7],
                     collector_number=row[8],
                     rarity=row[9],

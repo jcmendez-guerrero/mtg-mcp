@@ -89,8 +89,17 @@ class EDHRECClient:
             Commander data dictionary
         """
         try:
-            # EDHREC uses URL-friendly names
-            url_name = commander_name.lower().replace(" ", "-").replace(",", "")
+            # EDHREC uses URL-friendly names - convert to slug format
+            import re
+
+            url_name = commander_name.lower()
+            # Remove special characters except spaces and hyphens
+            url_name = re.sub(r"[^\w\s-]", "", url_name)
+            # Replace spaces with hyphens
+            url_name = re.sub(r"\s+", "-", url_name)
+            # Remove consecutive hyphens
+            url_name = re.sub(r"-+", "-", url_name).strip("-")
+
             response = await self.client.get(f"{self.BASE_URL}/commanders/{url_name}.json")
             response.raise_for_status()
             data = response.json()

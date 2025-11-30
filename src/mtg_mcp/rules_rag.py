@@ -10,9 +10,11 @@ import Stemmer
 class RulesRAG:
     """BM25s-based rules search engine."""
 
-    RULES_URL = "https://media.wizards.com/2024/downloads/MagicCompRules%2020240802.txt"
+    # Default rules URL - can be overridden in __init__
+    DEFAULT_RULES_URL = "https://media.wizards.com/2024/downloads/MagicCompRules%2020240802.txt"
 
-    def __init__(self):
+    def __init__(self, rules_url: Optional[str] = None):
+        self.rules_url = rules_url or self.DEFAULT_RULES_URL
         self.rules: list[dict] = []
         self.retriever: Optional[bm25s.BM25] = None
         self.stemmer = Stemmer.Stemmer("english")
@@ -26,7 +28,7 @@ class RulesRAG:
         try:
             # Download rules
             async with httpx.AsyncClient(timeout=60.0) as client:
-                response = await client.get(self.RULES_URL)
+                response = await client.get(self.rules_url)
                 response.raise_for_status()
                 rules_text = response.text
 

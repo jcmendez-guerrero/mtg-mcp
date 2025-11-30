@@ -131,14 +131,19 @@ async def list_tools() -> list[Tool]:
     ]
 
 
+async def ensure_db_connected():
+    """Ensure database is connected."""
+    if not db.db:
+        await db.connect()
+
+
 @app.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     """Handle tool calls."""
     try:
         if name == "ingest_manabox_csv":
             csv_content = arguments.get("csv_content", "")
-            if not db.db:
-                await db.connect()
+            await ensure_db_connected()
             result = await db.ingest_manabox_csv(csv_content)
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -154,8 +159,7 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             color_identity = arguments.get("color_identity", [])
             exclude_cards = set(arguments.get("exclude_cards", []))
 
-            if not db.db:
-                await db.connect()
+            await ensure_db_connected()
 
             cards = await db.get_cards_by_color_identity(color_identity)
 
@@ -206,8 +210,7 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
             ]
 
         elif name == "get_collection_stats":
-            if not db.db:
-                await db.connect()
+            await ensure_db_connected()
 
             cards = await db.get_all_cards()
             total_cards = len(cards)
