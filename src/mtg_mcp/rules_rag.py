@@ -151,15 +151,20 @@ class RulesRAG:
         query_tokens = query.lower().split()
         query_stemmed = self.stemmer.stemWords(query_tokens)
 
-        # Search
-        results, scores = self.retriever.retrieve(query_stemmed, k=min(top_k, len(self.rules)))
+        # Search - bm25s expects a list of queries
+        results, scores = self.retriever.retrieve([query_stemmed], k=min(top_k, len(self.rules)))
 
         # Format results
         search_results = []
-        for idx, score in zip(results[0], scores[0]):
-            rule = self.rules[idx]
-            search_results.append(
-                {"rule_number": rule["number"], "rule_text": rule["text"], "score": float(score)}
-            )
+        if len(results) > 0 and len(scores) > 0:
+            for idx, score in zip(results[0], scores[0]):
+                rule = self.rules[idx]
+                search_results.append(
+                    {
+                        "rule_number": rule["number"],
+                        "rule_text": rule["text"],
+                        "score": float(score),
+                    }
+                )
 
         return search_results
